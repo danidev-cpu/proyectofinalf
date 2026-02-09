@@ -17,12 +17,12 @@
 
      <ul class="nav-list">
          @auth
-             <!-- Menú desplegable para usuarios autenticados -->
+             <!-- Menú desplegable-->
              <li class="dropdown">
                  <a href="#">Administración ▼</a>
                  <ul class="dropdown-content">
-                     <li class="list_links"><a href="{{ route('añadir-jugador') }}">Añadir jugador</a></li>
-                     <li class="list_links"><a href="{{ route('añadir-evento') }}">Añadir evento</a></li>
+                     <li class="list_links"><a href="{{ route('players.store') }}">Añadir jugador</a></li>
+                     <li class="list_links"><a href="{{ route('events.store') }}">Añadir evento</a></li>
                      <li class="list_links"><a href="{{ route('mensaje') }}">Mensajes</a></li>
                  </ul>
              </li>

@@ -4,6 +4,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PlayerController;
 
 // Rutas de información simple (pueden quedarse como funciones o Route::view)
 Route::view('/', 'pages.index')->name('index');
@@ -24,10 +25,13 @@ Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('account', [LoginController::class, 'account'])->name('users.account');
 
 // Rutas de administración
-Route::get('/añadir-jugador', [EventController::class, 'añadirJugador'])->name('añadir-jugador');
-Route::get('/añadir-evento', [EventController::class, 'añadirEvento'])->name('añadir-evento');
+/* Route::get('/añadir-jugador', [EventController::class, 'añadirJugador'])->name('players.store'); */
+Route::get('/añadir-evento', [EventController::class, 'añadirEvento'])->name('events.store');
 Route::get('/mensaje', [EventController::class, 'mensaje'])->name('mensaje');
 
 Route::middleware('auth')->group(function () {
     Route::delete('/account/delete', [LoginController::class, 'destroy'])->name('users.destroy');
 });
+
+// Rutas de recursos para jugadores (CRUD)
+Route::resource('jugadores', PlayerController::class);

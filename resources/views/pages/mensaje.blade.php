@@ -1,3 +1,8 @@
-<div>
-    <!-- We must ship. - Taylor Otwell -->
-</div>
+@extends('layout.layout')
+
+@section('title', 'Añadir jugadores')
+
+@section('content')
+
+
+@endsection
