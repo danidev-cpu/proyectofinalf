@@ -16,13 +16,6 @@
     </div>
 
     <div class="container">
-        <form class="mb-4" role="search" method="GET" action="{{ route('jugadores.index') }}">
-            <div class="mt-2 d-flex justify-content-center gap-2 align-items-center">
-                <input type="search" name="q" placeholder="Buscar jugador" aria-label="Buscar jugador" value="{{ request('q') }}" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
-                <button type="submit" style="padding: 6px 12px; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; cursor: pointer;">Buscar</button>
-            </div>
-        </form>
-
         <div class="players-grid" style="display: flex; gap: 20px; flex-wrap: wrap;">
             @foreach ($players as $player)
                 <div class="player-card" style="border: 1px solid #ddd; padding: 10px; width: 200px;">

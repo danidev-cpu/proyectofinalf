@@ -20,15 +20,6 @@ class EventController extends Controller
             $query->where('visible', true);
         }
 
-        $search = trim((string) request()->get('q', ''));
-        if ($search !== '') {
-            $query->where(function ($subQuery) use ($search) {
-                $subQuery->where('name', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%")
-                    ->orWhere('tags', 'like', "%{$search}%");
-            });
-        }
-
         $events = $query->orderBy('date')->orderBy('hour')->get();
         $likedEventIds = [];
 

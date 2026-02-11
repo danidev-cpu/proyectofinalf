@@ -22,6 +22,10 @@
                 <img src="/img/logo.jpg" alt="logo heretics" style="height: 40px;">
             </a>
 
+            <form class="d-flex align-items-center" role="search" method="GET" action="{{ route('jugadores.index') }}">
+                <input class="form-control form-control-sm" type="search" name="q" placeholder="Buscar jugador" aria-label="Buscar jugador" value="{{ request('q') }}" style="width: 160px;">
+            </form>
+
             <ul class="navbar-nav flex-grow-1 justify-content-end">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('tienda') }}">Tienda</a>
