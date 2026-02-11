@@ -8,6 +8,11 @@
 
     {{-- Sección protegida visualmente --}}
     @auth
+        @if($user && $user->isAdmin())
+            <div class="alert alert-warning">
+                Eres administrador.
+            </div>
+        @endif
         <div class="alert alert-success">
             Estás viendo contenido exclusivo para usuarios registrados.
         </div>

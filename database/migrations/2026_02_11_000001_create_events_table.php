@@ -11,17 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('players', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('name', 30);
-            $table->string('slug')->unique();
-            $table->integer('number');
-            $table->text('twitter')->nullable();
-            $table->text('instagram')->nullable();
-            $table->text('twitch')->nullable();
-            $table->text('photo');
-            $table->string('position', 50)->nullable();
-            $table->string('country', 50)->nullable();
+            $table->text('description');
+            $table->text('location');
+            $table->text('map')->nullable();
+            $table->date('date')->nullable();
+            $table->time('hour');
+            $table->enum('type', ['official', 'exhibition', 'charity'])->default('official');
+            $table->text('tags');
             $table->boolean('visible')->default(false);
             $table->timestamps();
         });
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('players');
+        Schema::dropIfExists('events');
     }
 };

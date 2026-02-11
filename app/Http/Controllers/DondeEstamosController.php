@@ -11,6 +11,6 @@ class DondeEstamosController extends Controller
      */
     public function __invoke(Request $request)
     {
-        return view('where-to-find-us');
+        return view('pages.location');
     }
 }
