@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    public function likedEvents()
+    {
+        return $this->belongsToMany(Event::class, 'event_user_likes')->withTimestamps();
+    }
 }

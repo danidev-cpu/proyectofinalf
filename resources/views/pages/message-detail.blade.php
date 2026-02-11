@@ -9,8 +9,8 @@
             <a href="{{ route('mensaje') }}" class="btn btn-outline-secondary btn-sm">Volver</a>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body">
+        <div class="panel shadow-sm">
+            <div class="panel-body">
                 <p class="text-muted mb-2">De: {{ $message->name }}</p>
                 <p class="text-muted mb-4">Fecha: {{ $message->created_at->format('d/m/Y H:i') }}</p>
                 <p style="white-space: pre-line;">{{ $message->text }}</p>

@@ -25,7 +25,7 @@
             </section>
 
             <div class="alert alert-info mt-5">
-                <strong>Última actualización:</strong> 10 de febrero de 2026
+                <span class="text-strong">Última actualización:</span> 10 de febrero de 2026
             </div>
 
             <a href="{{ route('index') }}" class="btn btn-primary mt-3">Volver al inicio</a>

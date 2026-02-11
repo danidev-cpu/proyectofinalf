@@ -30,6 +30,7 @@ Route::get('account', [LoginController::class, 'account'])->name('users.account'
 
 Route::middleware('auth')->group(function () {
     Route::delete('/account/delete', [LoginController::class, 'destroy'])->name('users.destroy');
+    Route::post('/events/{event}/like', [EventController::class, 'toggleLike'])->name('events.like');
 });
 
 // Rutas de recursos para jugadores (CRUD) - públicas para ver, protegidas para crear/editar
@@ -42,7 +43,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
     Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
     Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
-    Route::post('/events/{event}/players', [EventController::class, 'attachPlayer'])->name('events.players.attach');
     Route::delete('/events/{event}/players/{player}', [EventController::class, 'detachPlayer'])->name('events.players.detach');
 
     Route::get('/añadir-evento', [EventController::class, 'create'])->name('events.legacy.create');

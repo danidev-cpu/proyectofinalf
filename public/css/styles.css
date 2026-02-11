@@ -25,6 +25,34 @@ nav {
     order: -1;
 }
 
+.panel {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+}
+
+.panel-body {
+    padding: 16px;
+}
+
+.panel--full {
+    height: 100%;
+}
+
+.text-strong {
+    font-weight: 700;
+}
+
+:root {
+    --home-ink: #111111;
+    --home-ink-soft: #2c2c2c;
+    --home-cream: #f5f1e8;
+    --home-sand: #e8dcc7;
+    --home-gold: #c9a662;
+    --home-graphite: #1b1b1b;
+    --home-white: #ffffff;
+}
+
 /* --- Estilos antiguos no usados --- */
 .barra-inicio {
     width: auto;

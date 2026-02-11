@@ -23,8 +23,8 @@
         <div class="row g-4">
             @forelse ($events as $event)
                 <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body d-flex flex-column">
+                    <div class="panel panel--full shadow-sm">
+                        <div class="panel-body d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h5 class="card-title mb-0">{{ $event->name }}</h5>
                                 <span class="badge text-bg-secondary">{{ ucfirst($event->type) }}</span>

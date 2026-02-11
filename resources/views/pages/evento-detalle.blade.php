@@ -12,9 +12,9 @@
         @endif
 
         <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="card shadow-sm">
-                    <div class="card-body">
+            <div class="col-lg-7">
+                <div class="panel shadow-sm">
+                    <div class="panel-body">
                         <h1 class="h3">{{ $event->name }}</h1>
                         <p class="text-muted mb-2">
                             @if ($event->date)
@@ -28,15 +28,23 @@
                         <p>{{ $event->description }}</p>
                         <p class="small text-muted">Tags: {{ $event->tags }}</p>
 
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
                             <a href="{{ route('events') }}" class="btn btn-outline-secondary">Volver</a>
+                            <form method="POST" action="{{ route('events.like', $event) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-danger ">
+                                    {{ $isLiked ? 'Quitar me gusta' : 'Me gusta' }}
+                                </button>
+                            </form>
+                            <span class="text-muted small">{{ $likesCount }} me gusta</span>
                         </div>
                     </div>
                 </div>
-
-                @if ($event->map)
-                    <div class="card shadow-sm mt-4">
-                        <div class="card-body">
+            </div>
+            @if ($event->map)
+                <div class="col-lg-5">
+                    <div class="panel shadow-sm">
+                        <div class="panel-body">
                             <h2 class="h5">Mapa</h2>
                             <div class="ratio ratio-16x9">
                                 <iframe src="{{ $event->map }}" style="border:0;" allowfullscreen="" loading="lazy"
@@ -44,54 +52,8 @@
                             </div>
                         </div>
                     </div>
-                @endif
-            </div>
-
-            <div class="col-lg-6">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h2 class="h5">Jugadores participantes</h2>
-                        @if ($eventPlayersForView->isEmpty())
-                            <p class="text-muted">Aun no hay jugadores asignados.</p>
-                        @else
-                            <ul class="list-group list-group-flush mb-3">
-                                @foreach ($eventPlayersForView as $player)
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span>{{ $player->name }} (#{{ $player->number }})</span>
-                                        @if ($user instanceof \App\Models\User && $user->isAdmin())
-                                            <form method="POST"
-                                                action="{{ route('events.players.detach', [$event, $player]) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-dark">Quitar</button>
-                                            </form>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-
-                        @if ($user instanceof \App\Models\User && $user->isAdmin())
-                            <h3 class="h6">Anadir jugador visible</h3>
-                            <form method="POST" action="{{ route('events.players.attach', $event) }}"
-                                class="d-flex gap-2">
-                                @csrf
-                                <select name="player_id" class="form-select" required>
-                                    <option value="">Selecciona jugador</option>
-                                    @foreach ($visiblePlayers as $player)
-                                        @if (!$event->players->contains($player->id))
-                                            <option value="{{ $player->id }}">{{ $player->name }}
-                                                (#{{ $player->number }})
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                <button type="submit" class="btn btn-outline-primary">Anadir</button>
-                            </form>
-                        @endif
-                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 @endsection
