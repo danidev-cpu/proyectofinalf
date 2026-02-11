@@ -8,7 +8,7 @@
 
     {{-- Sección protegida visualmente --}}
     @auth
-        @if($user && $user->isAdmin())
+        @if ($user instanceof \App\Models\User && $user->isAdmin())
             <div class="alert alert-warning">
                 Eres administrador.
             </div>

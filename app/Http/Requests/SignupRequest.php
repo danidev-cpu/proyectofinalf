@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
 class SignupRequest extends FormRequest
 {
@@ -23,10 +22,10 @@ class SignupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'string', 'min:3', 'max:50', 'unique:users,username'],
-            'name' => ['required', 'string', 'min:2', 'max:255'],
+            'username' => ['required', 'string', 'unique:users,username'],
+            'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', Password::defaults(), 'confirmed'],
+            'password' => ['required', 'string', 'confirmed'],
         ];
     }
 
@@ -34,18 +33,13 @@ class SignupRequest extends FormRequest
     {
         return [
             'username.required' => 'El nombre de usuario es obligatorio.',
-            'username.min' => 'El nombre de usuario debe tener al menos :min caracteres.',
-            'username.max' => 'El nombre de usuario no debe exceder de :max caracteres.',
             'username.unique' => 'El nombre de usuario ya está en uso.',
-            'name.min' => 'El nombre debe tener al menos :min caracteres.',
-            'name.max' => 'El nombre no debe exceder de :max caracteres.',
             'name.required' => 'El nombre es obligatorio.',
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.unique' => 'El correo electrónico ya está en uso.',
             'email.email' => 'El correo electrónico debe ser una dirección válida.',
             'password.required' => 'La contraseña es obligatoria.',
             'password.confirmed' => 'La confirmación de la contraseña no coincide.',
-            'password.min' => 'La contraseña debe tener al menos :min caracteres.',
         ];
     }
 }

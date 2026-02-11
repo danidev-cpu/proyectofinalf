@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Player;
+use App\Models\User;
+use App\Http\Requests\StorePlayerRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,8 +20,9 @@ class PlayersController extends Controller
     public function index(Request $request)
     {
         $query = Player::query();
+        $user = Auth::user();
 
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        if (!($user instanceof User) || !$user->isAdmin()) {
             $query->where('visible', true);
         }
 
@@ -46,20 +49,8 @@ class PlayersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePlayerRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:30',
-            'number' => 'required|integer|min:1|max:99',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'twitter' => 'nullable|string',
-            'instagram' => 'nullable|string',
-            'twitch' => 'nullable|string',
-            'position' => 'nullable|string|max:50',
-            'country' => 'nullable|string|max:50',
-            'visible' => 'nullable|boolean',
-        ]);
-
         $player = new Player();
         $player->name = $request->name;
         $player->number = $request->number;
@@ -81,7 +72,7 @@ class PlayersController extends Controller
             $player->photo = $path;
         }
 
-        $player->save(); 
+        $player->save();
         return redirect()->route('jugadores.index')->with('success', 'Jugador añadido correctamente');
 
     }

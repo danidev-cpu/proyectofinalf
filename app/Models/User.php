@@ -47,7 +47,6 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
         ];
     }
 
@@ -57,10 +56,5 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
-    }
-
-    public function likedEvents()
-    {
-        return $this->belongsToMany(Event::class, 'event_user_likes')->withTimestamps();
     }
 }

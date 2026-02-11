@@ -6,7 +6,6 @@ use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -22,7 +21,7 @@ class LoginController extends Controller
         $user->username = $request->get('username');
         $user->name = $request->get('name');
         $user->email = $request->get('email');
-        $user->password = Hash::make($request->get('password'));
+        $user->password = $request->get('password');
         $user->save();
 
         Auth::login($user);
@@ -42,14 +41,15 @@ class LoginController extends Controller
     }
 
     public function login(Request $request): RedirectResponse{
-        $credentials = $request->only('username', 'password');
+        $user = User::where('username', $request->get('username'))->first();
 
-        if(Auth::guard('web')->attempt($credentials)){
+        if ($user instanceof User && $user->password === $request->get('password')) {
+            Auth::login($user);
             $request->session()->regenerate();
             return redirect()->route('users.account');
-        } else {
-            return back()->withErrors(['username' => 'Credenciales incorrectas.']);
         }
+
+        return back()->withErrors(['username' => 'Credenciales incorrectas.']);
     }
 
     public function logout(Request $request): RedirectResponse{

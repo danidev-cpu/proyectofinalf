@@ -26,9 +26,4 @@ class Event extends Model
     {
         return $this->belongsToMany(Player::class, 'event_player');
     }
-
-    public function likes()
-    {
-        return $this->belongsToMany(User::class, 'event_user_likes')->withTimestamps();
-    }
 }

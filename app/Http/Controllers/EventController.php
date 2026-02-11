@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Player;
+use App\Models\User;
+use App\Http\Requests\StoreEventRequest;
+use App\Http\Requests\UpdateEventRequest;
+use App\Http\Requests\AttachEventPlayerRequest;
 use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
@@ -15,36 +19,32 @@ class EventController extends Controller
     public function index()
     {
         $query = Event::query();
+        $user = Auth::user();
 
-        if (!Auth::check() || !Auth::user()->isAdmin()) {
+        if (!($user instanceof User) || !$user->isAdmin()) {
             $query->where('visible', true);
         }
 
         $events = $query->orderBy('date')->orderBy('hour')->get();
-        $likedEventIds = [];
 
-        if (Auth::check()) {
-            $likedEventIds = Auth::user()->likedEvents()->pluck('events.id')->all();
-        }
-
-        return view('pages.events', compact('events', 'likedEventIds'));
+        return view('pages.events', compact('events'));
     }
 
     public function show(Event $event)
     {
-        if (!Auth::check() || (!Auth::user()->isAdmin() && !$event->visible)) {
+        $user = Auth::user();
+        if (!($user instanceof User) || (!$user->isAdmin() && !$event->visible)) {
             abort(403, 'No tienes permiso para acceder a este evento.');
         }
 
-        $event->load(['players', 'likes']);
+        $event->load(['players']);
         $eventPlayersForView = $event->players;
-        if (!Auth::user()->isAdmin()) {
+        if (!$user->isAdmin()) {
             $eventPlayersForView = $event->players->where('visible', true)->values();
         }
         $visiblePlayers = Player::where('visible', true)->orderBy('name')->get();
-        $liked = Auth::check() ? $event->likes->contains(Auth::id()) : false;
 
-        return view('pages.evento-detalle', compact('event', 'visiblePlayers', 'liked', 'eventPlayersForView'));
+        return view('pages.evento-detalle', compact('event', 'visiblePlayers', 'eventPlayersForView'));
     }
 
     public function create()
@@ -53,30 +53,20 @@ class EventController extends Controller
         return view('pages.añadir-evento', compact('event'));
     }
 
-    public function store(Request $request)
+    public function store(StoreEventRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:30',
-            'description' => 'required|string',
-            'location' => 'required|string',
-            'map' => 'nullable|string',
-            'date' => 'nullable|date',
-            'hour' => 'required|date_format:H:i',
-            'type' => 'required|in:official,exhibition,charity',
-            'tags' => 'required|string',
-            'visible' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
 
         $event = new Event();
-        $event->name = $validated['name'];
-        $event->description = $validated['description'];
-        $event->location = $validated['location'];
-        $event->map = $validated['map'] ?? null;
-        $event->date = $validated['date'] ?? null;
-        $event->hour = $validated['hour'];
-        $event->type = $validated['type'];
-        $event->tags = $validated['tags'];
-        $event->visible = (bool) ($validated['visible'] ?? false);
+        $event->name = $data['name'];
+        $event->description = $data['description'];
+        $event->location = $data['location'];
+        $event->map = $data['map'] ?? null;
+        $event->date = $data['date'] ?? null;
+        $event->hour = $data['hour'];
+        $event->type = $data['type'];
+        $event->tags = $data['tags'];
+        $event->visible = (bool) ($data['visible'] ?? false);
 
         $event->save();
 
@@ -88,29 +78,19 @@ class EventController extends Controller
         return view('pages.añadir-evento', compact('event'));
     }
 
-    public function update(Request $request, Event $event)
+    public function update(UpdateEventRequest $request, Event $event)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:30',
-            'description' => 'required|string',
-            'location' => 'required|string',
-            'map' => 'nullable|string',
-            'date' => 'nullable|date',
-            'hour' => 'required|date_format:H:i',
-            'type' => 'required|in:official,exhibition,charity',
-            'tags' => 'required|string',
-            'visible' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
 
-        $event->name = $validated['name'];
-        $event->description = $validated['description'];
-        $event->location = $validated['location'];
-        $event->map = $validated['map'] ?? null;
-        $event->date = $validated['date'] ?? null;
-        $event->hour = $validated['hour'];
-        $event->type = $validated['type'];
-        $event->tags = $validated['tags'];
-        $event->visible = (bool) ($validated['visible'] ?? false);
+        $event->name = $data['name'];
+        $event->description = $data['description'];
+        $event->location = $data['location'];
+        $event->map = $data['map'] ?? null;
+        $event->date = $data['date'] ?? null;
+        $event->hour = $data['hour'];
+        $event->type = $data['type'];
+        $event->tags = $data['tags'];
+        $event->visible = (bool) ($data['visible'] ?? false);
 
         $event->save();
 
@@ -124,26 +104,10 @@ class EventController extends Controller
         return redirect()->route('events')->with('success', 'Evento eliminado correctamente.');
     }
 
-    public function toggleLike(Event $event)
+    public function attachPlayer(AttachEventPlayerRequest $request, Event $event)
     {
-        $user = Auth::user();
-
-        if ($event->likes()->where('user_id', $user->id)->exists()) {
-            $event->likes()->detach($user->id);
-        } else {
-            $event->likes()->attach($user->id);
-        }
-
-        return back();
-    }
-
-    public function attachPlayer(Request $request, Event $event)
-    {
-        $validated = $request->validate([
-            'player_id' => 'required|exists:players,id',
-        ]);
-
-        $player = Player::where('id', $validated['player_id'])->where('visible', true)->firstOrFail();
+        $data = $request->validated();
+        $player = Player::where('id', $data['player_id'])->where('visible', true)->firstOrFail();
         $event->players()->syncWithoutDetaching([$player->id]);
 
         return back()->with('success', 'Jugador añadido al evento.');

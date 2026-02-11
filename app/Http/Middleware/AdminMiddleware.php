@@ -16,10 +16,13 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->isAdmin()) {
+        $user = Auth::user();
+
+        if ($user instanceof \App\Models\User && $user->isAdmin()) {
             return $next($request);
         }
 
+        
         abort(403, 'No tienes permiso para acceder a esta página.');
     }
 }

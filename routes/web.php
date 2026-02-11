@@ -54,7 +54,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/jugadores/{id}/toggle-visibility', [PlayersController::class, 'toggleVisibility'])->name('jugadores.toggleVisibility');
 });
 
-Route::post('/events/{event}/like', [EventController::class, 'toggleLike'])->name('events.like')->middleware('auth');
 Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show')->middleware('auth');
 
 Route::get('/jugadores/{jugadore}', [PlayersController::class, 'show'])->name('jugadores.show')->middleware('auth');
