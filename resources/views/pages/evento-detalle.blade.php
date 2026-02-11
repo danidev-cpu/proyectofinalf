@@ -53,11 +53,11 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <h2 class="h5">Jugadores participantes</h2>
-                        @if($event->players->isEmpty())
+                        @if($eventPlayersForView->isEmpty())
                             <p class="text-muted">Aun no hay jugadores asignados.</p>
                         @else
                             <ul class="list-group list-group-flush mb-3">
-                                @foreach($event->players as $player)
+                                @foreach($eventPlayersForView as $player)
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <span>{{ $player->name }} (#{{ $player->number }})</span>
                                         @if(auth()->user()->isAdmin())

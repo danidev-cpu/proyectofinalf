@@ -20,6 +20,15 @@ class EventController extends Controller
             $query->where('visible', true);
         }
 
+        $search = trim((string) request()->get('q', ''));
+        if ($search !== '') {
+            $query->where(function ($subQuery) use ($search) {
+                $subQuery->where('name', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('tags', 'like', "%{$search}%");
+            });
+        }
+
         $events = $query->orderBy('date')->orderBy('hour')->get();
         $likedEventIds = [];
 
@@ -37,10 +46,14 @@ class EventController extends Controller
         }
 
         $event->load(['players', 'likes']);
+        $eventPlayersForView = $event->players;
+        if (!Auth::user()->isAdmin()) {
+            $eventPlayersForView = $event->players->where('visible', true)->values();
+        }
         $visiblePlayers = Player::where('visible', true)->orderBy('name')->get();
         $liked = Auth::check() ? $event->likes->contains(Auth::id()) : false;
 
-        return view('pages.evento-detalle', compact('event', 'visiblePlayers', 'liked'));
+        return view('pages.evento-detalle', compact('event', 'visiblePlayers', 'liked', 'eventPlayersForView'));
     }
 
     public function create()

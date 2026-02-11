@@ -13,6 +13,13 @@
             @endauth
         </div>
 
+        <form class="mb-4" role="search" method="GET" action="{{ route('events') }}">
+            <div class="mt-2 d-flex justify-content-center gap-2 align-items-center">
+                <input type="search" name="q" placeholder="Buscar evento" aria-label="Buscar evento" value="{{ request('q') }}" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px;">
+                <button type="submit" style="padding: 6px 12px; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; cursor: pointer;">Buscar</button>
+            </div>
+        </form>
+
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
